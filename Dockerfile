@@ -13,6 +13,7 @@ RUN cargo build --release
 
 # Copy the source and build the application.
 COPY src ./src
+COPY sqlx-data.json ./
 RUN cargo test --release
 RUN cargo install --path .
 
