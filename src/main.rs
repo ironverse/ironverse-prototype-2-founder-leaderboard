@@ -46,7 +46,7 @@ async fn main() -> anyhow::Result<()> {
         .or(assets_filter());
 
     warp::serve(routes)
-        .run(([0, 0, 0, 0], 3030))
+        .run(([0, 0, 0, 0], 80))
         .await;
 
     Ok(())

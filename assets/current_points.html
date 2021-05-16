@@ -20,7 +20,7 @@
         document.getElementById("user-score").innerHTML = info.points + " Points (Rank: #" + info.rank + ")";
       }
     };
-    xhttp.open("GET", "http://localhost:3030/email/" + email + "/founder_points", true);
+    xhttp.open("GET", "https://founder-leaderboard.ironverse.com/email/" + email + "/founder_points", true);
     xhttp.send();
   }
 </script>
