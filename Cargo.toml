@@ -1,0 +1,16 @@
+[package]
+name = "founder-leaderboard"
+version = "0.1.0"
+authors = ["ashneverdawn"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.40"
+warp = "0.2.5"
+tokio = { version = "0.2.25", features = ["full"] }
+serde = "1.0.126"
+serde_derive = "1.0.126"
+sqlx = { version = "0.4.2", features = [ "postgres", "time", "runtime-tokio-native-tls"] }
+chrono = "0.4.19"

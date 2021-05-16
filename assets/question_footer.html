@@ -1,0 +1,9 @@
+<script language="javascript" type="text/javascript">
+const urlParams = new URLSearchParams(window.location.search);
+for (const element of document.getElementsByClassName("from_email")) {
+    element.value = urlParams.get('from_email');
+}
+for (const element of document.getElementsByClassName("from_username")) {
+    element.value = urlParams.get('from_username');
+}
+</script>

@@ -1,0 +1,83 @@
+<div class="scores" id="leaderboard">
+    <div class="score">
+      <p class="rank">#1</p>
+      <img class="medal" src="https://images.clickfunnels.com/b1/1276db869245f096c8ea5ab68d6032/Gold-Medal.png" alt="gold medal">
+      <div class="founder">
+        <p class="founder-name">Pheobe Buffay</p>
+        <p class="founder-score">14 points</p>
+      </div>
+    </div>
+    <div class="score">
+      <p class="rank">#2</p>
+      <img class="medal" src="https://images.clickfunnels.com/45/c65ed0cccc4aab89e9ac7d2c1136ef/Silver-Medal.png" alt="silver medal">
+      <div class="founder">
+        <p class="founder-name">Chandler Bing</p>
+        <p class="founder-score">10 points</p>
+      </div>
+    </div>
+    <div class="score">
+      <p class="rank">#3</p>
+      <img class="medal" src="https://images.clickfunnels.com/fc/0c8e0a29da4fd78f6d5878b3d50046/Bronze-Medal.png" alt="bronze medal">
+      <div class="founder">
+        <p class="founder-name">Monica Geller</p>
+        <p class="founder-score">8 points</p>
+      </div>
+    </div>
+    <div class="score">
+      <p class="rank">#5</p>
+      <img class="medal" src="">
+      <div class="founder">
+        <p class="founder-name">Joey Tribbiani</p>
+        <p class="founder-score">7 points</p>
+      </div>
+    </div>
+    <div class="score">
+      <p class="rank">#6</p>
+      <img class="medal" src="">
+      <div class="founder">
+        <p class="founder-name">Rachel Green</p>
+        <p class="founder-score">4 points</p>
+      </div>
+    </div>
+    <div class="score">
+      <p class="rank">#7</p>
+      <img class="medal" src="">
+      <div class="founder">
+        <p class="founder-name">Ross Geller</p>
+        <p class="founder-score">1 points</p>
+      </div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        const response = JSON.parse(this.responseText)
+        const leaderboard = document.getElementById("leaderboard");
+        leaderboard.innerHTML = "";
+        response.items.forEach((item, index) => {
+            var medal = 'src=""';
+            if (index === 0) {
+                medal = 'src="https://images.clickfunnels.com/b1/1276db869245f096c8ea5ab68d6032/Gold-Medal.png" alt="gold medal"'
+            } else if (index === 1) {
+                medal = 'src="https://images.clickfunnels.com/45/c65ed0cccc4aab89e9ac7d2c1136ef/Silver-Medal.png" alt="silver medal"'
+            } else if (index === 2) {
+                medal = 'src="https://images.clickfunnels.com/fc/0c8e0a29da4fd78f6d5878b3d50046/Bronze-Medal.png" alt="bronze medal"'
+            }
+            leaderboard.innerHTML += `
+                <div class="score">
+                    <p class="rank">#` + item.rank + `</p>
+                    <img class="medal" ` + medal + `>
+                    <div class="founder">
+                        <p class="founder-name">` + item.username + `</p>
+                        <p class="founder-score">` + item.points + ` points</p>
+                    </div>
+                </div>`
+        });
+    }
+  };
+  xhttp.open("GET", "http://localhost:3030/leaderboard?count=7&skip=0", true);
+  xhttp.send();
+  
+</script>
