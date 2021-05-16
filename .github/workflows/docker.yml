@@ -9,14 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Checkout master
-      uses: actions/checkout@master
-
-    - name: Update SHA
-      run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/site/_meta
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Build container image
-      run: docker build -t registry.digitalocean.com/ironverse/founder-leaderboard:$(echo $GITHUB_SHA | head -c7) .
+      run: docker build -t registry.digitalocean.com/ironverse/founder-leaderboard:$(date +'%Y-%m-%d-')$(echo $GITHUB_SHA | head -c7 ) .
 
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
