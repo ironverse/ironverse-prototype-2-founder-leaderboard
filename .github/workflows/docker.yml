@@ -16,7 +16,6 @@ jobs:
 
     - name: Build container image
       run: docker build -t registry.digitalocean.com/$(echo $GITHUB_REPOSITORY):$(date +'%Y-%m-%d-')$(echo $GITHUB_SHA | head -c7 ) .
-      env: 
 
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
