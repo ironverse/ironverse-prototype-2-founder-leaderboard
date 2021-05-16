@@ -2,7 +2,7 @@
     <img src="https://images.clickfunnels.com/3e/7f7fdb945e47c59504743ea143a249/Leaderboard-Avatar.png" alt="Auggie the Axolotl" class="axolotl">
     <div class="user">
       <p class="username" id="username">Founder Name</p>
-      <p class="user-score" id="user-score">0 Points (Rank: #0)</p>
+      <p class="user-score" id="user-score">0 Points (Rank: #0 / 0)</p>
       <p class="message">This is Auggie the Axolotl. Keep him happy by checking your emails daily and collecting founder points! Rewards await those who climb up the leaderboard!</p>
     </div>
 </div>
@@ -16,8 +16,8 @@
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const info = JSON.parse(this.responseText);
-        document.getElementById("username").innerHTML = info.username;
-        document.getElementById("user-score").innerHTML = info.points + " Points (Rank: #" + info.rank + ")";
+        document.getElementById("username").innerHTML = info.items[0].username;
+        document.getElementById("user-score").innerHTML = info.items[0].points + " Points (Rank: #" + info.items[0].rank + " / " + info.total_count + ")";
       }
     };
     xhttp.open("GET", "https://founder-leaderboard.ironverse.com/email/" + email + "/founder_points", true);

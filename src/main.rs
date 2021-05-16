@@ -45,8 +45,9 @@ async fn main() -> anyhow::Result<()> {
         .or(answer)
         .or(assets_filter());
 
+    let port = env::var("PORT")?.parse::<u16>()?;
     warp::serve(routes)
-        .run(([0, 0, 0, 0], 80))
+        .run(([0, 0, 0, 0], port))
         .await;
 
     Ok(())
@@ -76,13 +77,7 @@ pub async fn handle_leaderboard(params: HashMap<String, String>, db: Pool<Postgr
         }
     }
 
-    let total_count = match sqlx::query!(r#"
-    SELECT COUNT(1) as total_count
-    FROM (
-        SELECT COUNT(DISTINCT(question)) * 10 as points 
-        FROM founder_answers 
-        GROUP BY email
-    )"#)
+    let total_count = match sqlx::query!("SELECT COUNT(DISTINCT(email)) as total_count FROM founder_answers")
     .fetch_one(&db)
     .await {
         Ok(res) => res.total_count,
@@ -116,6 +111,15 @@ pub async fn handle_leaderboard(params: HashMap<String, String>, db: Pool<Postgr
 }
 
 pub async fn handle_founder_points(email: String, db: Pool<Postgres>) -> Result<impl warp::Reply, Infallible> {
+    let total_count = match sqlx::query!("SELECT COUNT(DISTINCT(email)) as total_count FROM founder_answers")
+    .fetch_one(&db)
+    .await {
+        Ok(res) => res.total_count,
+        Err(e) => {
+            println!("{:?}", e);
+            Some(0)
+        }
+    };
     let rank = match sqlx::query_as!(Rank, r#"
         SELECT username, points, RANK() OVER (ORDER BY points) rank 
         FROM (
@@ -133,8 +137,9 @@ pub async fn handle_founder_points(email: String, db: Pool<Postgres>) -> Result<
             Rank{username: Some(String::from("")), points:Some(0), rank:Some(0)}
         }
     };
-    println!("{} \n- handler: {} \n- req: {:?} \n- res: {:?}", Utc::now(), "handle_founder_points", &email, &rank);
-    Ok(warp::reply::with_header(warp::reply::json(&rank), "Access-Control-Allow-Origin", "*"))
+    let founder_points = Leaderboard{total_count: total_count, items: vec![rank]};
+    println!("{} \n- handler: {} \n- req: {:?} \n- res: {:?}", Utc::now(), "handle_founder_points", &email, &founder_points);
+    Ok(warp::reply::with_header(warp::reply::json(&founder_points), "Access-Control-Allow-Origin", "*"))
 }
 
 pub async fn handle_submit_answer(form: HashMap<String, String>, db: Pool<Postgres>) -> Result<impl warp::Reply, Infallible> {

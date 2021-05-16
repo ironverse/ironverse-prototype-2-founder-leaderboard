@@ -27,6 +27,8 @@
 
 ## run the app
 
+`export PORT=3030`
+
 `cargo run`
 
 ## build the container
