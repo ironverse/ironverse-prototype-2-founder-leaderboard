@@ -18,7 +18,7 @@ jobs:
       uses: docker/login-action@v1 
       with:
         registry: registry.digitalocean.com
-        username: ${{ ashneverdawn }}
+        username: ashneverdawn
         password: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     - name: Build and push
