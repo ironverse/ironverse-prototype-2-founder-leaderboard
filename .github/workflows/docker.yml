@@ -39,6 +39,9 @@ jobs:
       id: tag
       run: echo "::set-output name=tags::"$(echo $GITHUB_REPOSITORY):$(date +'%Y-%m-%d-')$(echo $GITHUB_SHA | head -c7 )
 
+    - name: Echo Image Tag
+      run: echo ${{ steps.tag.outputs.tags }}
+
     # - name: Cache Docker layers
     #   uses: actions/cache@v2
     #   with:
