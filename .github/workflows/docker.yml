@@ -42,30 +42,36 @@ jobs:
     - name: Echo Image Tag
       run: echo ${{ steps.tag.outputs.tags }}
 
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-
+    - name: Build container image
+      run: docker build -t registry.digitalocean.com/${{ steps.tag.outputs.tags }} .
 
-    - name: Build and push
-      id: docker_build
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: ${{ steps.tag.outputs.tags }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache-new
+    - name: Push image to DigitalOcean Container Registry
+      run: docker push registry.digitalocean.com/${{ steps.tag.outputs.tags }}
 
-      # Temp fix
-      # https://github.com/docker/build-push-action/issues/252
-      # https://github.com/moby/buildkit/issues/1896
-    - name: Move cache
-      run: |
-        rm -rf /tmp/.buildx-cache
-        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+    # - name: Cache Docker layers
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: /tmp/.buildx-cache
+    #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-buildx-
+
+    # - name: Build and push
+    #   id: docker_build
+    #   uses: docker/build-push-action@v2
+    #   with:
+    #     push: true
+    #     tags: ${{ steps.tag.outputs.tags }}
+    #     cache-from: type=local,src=/tmp/.buildx-cache
+    #     cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+    #   # Temp fix
+    #   # https://github.com/docker/build-push-action/issues/252
+    #   # https://github.com/moby/buildkit/issues/1896
+    # - name: Move cache
+    #   run: |
+    #     rm -rf /tmp/.buildx-cache
+    #     mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
