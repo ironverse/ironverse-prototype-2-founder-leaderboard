@@ -4,9 +4,8 @@ on:
       - master
 
 jobs:
-
   build:
-    name: Build, push
+    name: Build and Push
     runs-on: ubuntu-latest
     steps:
 
