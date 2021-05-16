@@ -1,3 +1,5 @@
+name: ci
+
 on:
   push:
     branches:
@@ -12,8 +14,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Image Tag
+      run: export IMAGE_TAG=registry.digitalocean.com/ironverse/founder-leaderboard:$(date +'%Y-%m-%d-')$(echo $GITHUB_SHA | head -c7 )
+
     - name: Build container image
-      run: docker build -t registry.digitalocean.com/ironverse/founder-leaderboard:$(date +'%Y-%m-%d-')$(echo $GITHUB_SHA | head -c7 ) .
+      run: docker build -t $IMAGE_TAG .
 
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
@@ -24,4 +29,4 @@ jobs:
       run: doctl registry login --expiry-seconds 600
 
     - name: Push image to DigitalOcean Container Registry
-      run: docker push registry.digitalocean.com/asb/static-example:$(echo $GITHUB_SHA | head -c7)
+      run: docker push $IMAGE_TAG

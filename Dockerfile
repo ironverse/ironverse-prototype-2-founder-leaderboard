@@ -10,10 +10,10 @@ RUN USER=root cargo init
 # Copy cargo files and build deps
 COPY Cargo.toml ./
 RUN cargo build --release
-RUN cargo test --release
 
 # Copy the source and build the application.
 COPY src ./src
+RUN cargo test --release
 RUN cargo install --path .
 
 # Copy the statically-linked binary into a scratch container.
