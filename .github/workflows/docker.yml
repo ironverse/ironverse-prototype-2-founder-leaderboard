@@ -26,7 +26,7 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: registry.digitalocean.com
-        username: ${{ github.repository_owner }}
+        username: github-actions
         password: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
         
     # - name: Build container image
