@@ -13,7 +13,7 @@ jobs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-      
+
     - name: Cache Docker layers
       uses: actions/cache@v2
       with:
@@ -36,13 +36,17 @@ jobs:
     # - name: Push image to DigitalOcean Container Registry
     #   run: docker push registry.digitalocean.com/$(echo $GITHUB_REPOSITORY):$(date +'%Y-%m-%d-')$(echo $GITHUB_SHA | head -c7 )
     
+    - name: Image Tag
+      id: tag
+      run: echo "::set-output name=tags::"$(echo $GITHUB_REPOSITORY):$(date +'%Y-%m-%d-')$(echo $GITHUB_SHA | head -c7 )
+
     - name: Build and push
       id: docker_build
       uses: docker/build-push-action@v2
       with:
         context: .
         push: true
-        tags: $(echo $GITHUB_REPOSITORY):$(date +'%Y-%m-%d_%T_')$(echo $GITHUB_SHA | head -c7 )
+        tags: ${{ steps.tag.outputs.tags }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache-new
 
