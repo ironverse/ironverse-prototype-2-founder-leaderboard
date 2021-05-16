@@ -31,6 +31,12 @@
 
 `cargo run`
 
+## to compile without live db connection, first do:
+
+`cargo install sqlx-cli`
+
+`cargo sqlx prepare`
+
 ## build the container
 
 `docker build .`

@@ -1,0 +1,101 @@
+{
+  "db": "PostgreSQL",
+  "4d710ae0e63ebcbafa15b7224556ff229d083ea3edf6cdecb310cd236de12b11": {
+    "query": "\n                        INSERT INTO founder_answers (email, username, question, answer)\n                        VALUES($1, $2, $3, $4)\n                        ON CONFLICT (email, question)\n                            DO UPDATE SET answer = EXCLUDED.answer, username = EXCLUDED.username, updated_on = now() at time zone 'utc'\n                        ",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Text",
+          "Text",
+          "Text"
+        ]
+      },
+      "nullable": []
+    }
+  },
+  "4f79d13b005cc22a5e9ba0987980772c113161e901c00635fde61a287f3e98f9": {
+    "query": "\n        SELECT points, RANK() OVER (ORDER BY points DESC) rank, username \n        FROM (\n            SELECT email, MAX(username) as username,  COUNT(DISTINCT(question)) * 10 as points \n            FROM founder_answers \n            GROUP BY email\n        ) \n        LIMIT $1 OFFSET $2",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "points",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "rank",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "username",
+          "type_info": "Text"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Int8"
+        ]
+      },
+      "nullable": [
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  "c825836a655417172eb29fbfe319a168dca2a04aef8097dab2482badab75e6dd": {
+    "query": "\n        SELECT username, points, RANK() OVER (ORDER BY points) rank \n        FROM (\n            SELECT email, MAX(username) as username, COUNT(DISTINCT(question)) * 10 as points \n            FROM founder_answers GROUP BY email\n        ) \n        WHERE email = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "username",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 1,
+          "name": "points",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "rank",
+          "type_info": "Int8"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      },
+      "nullable": [
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  "dbebe69e3ffad1948a85206dfe11381ec25ccd82b4dbd738bc9b10de5adbe61a": {
+    "query": "SELECT COUNT(DISTINCT(email)) as total_count FROM founder_answers",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "total_count",
+          "type_info": "Int8"
+        }
+      ],
+      "parameters": {
+        "Left": []
+      },
+      "nullable": [
+        null
+      ]
+    }
+  }
+}
