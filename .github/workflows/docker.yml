@@ -14,11 +14,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Image Tag
-      run: export IMAGE_TAG=registry.digitalocean.com/ironverse/founder-leaderboard:$(date +'%Y-%m-%d-')$(echo $GITHUB_SHA | head -c7 )
-
     - name: Build container image
-      run: docker build -t $(echo $IMAGE_TAG) .
+      run: docker build -t registry.digitalocean.com/$(echo $GITHUB_REPOSITORY):$(date +'%Y-%m-%d-')$(echo $GITHUB_SHA | head -c7 ) .
+      env: 
 
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
@@ -29,4 +27,4 @@ jobs:
       run: doctl registry login --expiry-seconds 600
 
     - name: Push image to DigitalOcean Container Registry
-      run: docker push $(echo $IMAGE_TAG)
+      run: docker push registry.digitalocean.com/$(echo $GITHUB_REPOSITORY):$(date +'%Y-%m-%d-')$(echo $GITHUB_SHA | head -c7 )
