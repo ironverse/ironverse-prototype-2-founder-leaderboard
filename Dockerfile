@@ -5,7 +5,7 @@ FROM rust:1.52.1 AS build
 
 # Setup dummy project
 WORKDIR /usr/src/app
-RUN USER=root cargo init
+RUN cargo init
 
 # Copy cargo files and build deps
 COPY Cargo.toml ./
