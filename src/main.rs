@@ -39,8 +39,11 @@ async fn main() -> anyhow::Result<()> {
     .and(with_db(db.clone()))
     .and_then(handle_submit_answer);
 
+    let health = warp::path::end().map(|| warp::reply());
+
     let routes = 
-        founder_leaderboard
+        health
+        .or(founder_leaderboard)
         .or(founder_points)
         .or(answer)
         .or(assets_filter());
