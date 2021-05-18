@@ -25,4 +25,5 @@ RUN cargo test --release
 # Copy the statically-linked binary into a scratch container.
 FROM gcr.io/distroless/cc
 COPY --from=build --chown=4001:4001 /usr/src/app/target/release/founder-leaderboard .
+USER 4001:4001
 CMD ["./founder-leaderboard"]
