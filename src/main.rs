@@ -5,6 +5,7 @@ use anyhow::Result;
 use chrono::Utc;
 use serde_derive::{Deserialize, Serialize};
 use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
+use url::Url;
 use warp::{Filter, Reply, filters::BoxedFilter, hyper::Uri};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -157,7 +158,14 @@ pub async fn handle_submit_answer(form: HashMap<String, String>, db: Pool<Postgr
 
         //redirect to leaderboard
         if let Some(url) = form.get("success_url") {
-            if let Ok(uri) = Uri::from_str(&format!("{}?from_email={}&from_username={}", url, email, username)) {
+            
+            let mut url = Url::parse(url).unwrap();
+            url.query_pairs_mut().append_pair("from_email", email);
+            url.query_pairs_mut().append_pair("from_username", username);
+            let url = url.to_string();
+            println!("{:?}", url);
+            
+            if let Ok(uri) = Uri::from_str(&url) {
                 redirect_uri = uri;
             }
         }
