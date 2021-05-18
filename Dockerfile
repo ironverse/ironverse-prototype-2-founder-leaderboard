@@ -7,13 +7,18 @@ FROM rust:1.52.1 AS build
 WORKDIR /usr/src/app
 RUN cargo init
 
-# Copy cargo files and build deps
+# Copy Cargo.toml and build the dependencies
 COPY Cargo.toml ./
 RUN cargo build --release
 
-# Copy the source and build the application.
-COPY src ./src
+# Copy the source
 COPY sqlx-data.json ./
+COPY src ./src
+
+# Mark source as updated
+RUN touch -a -m ./src/main.rs
+
+# Build the application.
 RUN cargo build --release
 RUN cargo test --release
 
